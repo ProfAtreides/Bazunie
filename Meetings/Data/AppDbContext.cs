@@ -126,6 +126,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.IdFilii, "idFilii");
 
+            //entity.Property(e => e.Admin, "admin").HasColumnName("admin");
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("idPracownika");

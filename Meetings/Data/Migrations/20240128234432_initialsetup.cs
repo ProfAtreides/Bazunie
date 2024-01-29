@@ -98,7 +98,7 @@ namespace Meetings.Migrations
                 columns: table => new
                 {
                     idPracownika = table.Column<int>(type: "int", nullable: false),
-                    admin = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    admin = table.Column<bool>(type: "tinyint(1)", nullable: false,defaultValue:false),
                     imie_pracownika = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_polish_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     nazwisko_pracownika = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_polish_ci")

@@ -5,7 +5,7 @@ namespace Meetings.Models;
 
 public class Pracownik
 {
-    public bool admin { get; set; }
+    public bool Admin { get; set; }
     public int Id { get; set; }
 
     public string? ImiePracownika { get; set; }

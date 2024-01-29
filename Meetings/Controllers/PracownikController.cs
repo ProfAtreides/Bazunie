@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,13 @@ namespace Meetings.Controllers
             return View(pracownik);
         }
 
+        // SET: Pracownik/Create 
+        private string HashPassword(string password)
+        {
+            var passwordHasher = new PasswordHasher<object>();
+            string hashedPassword = passwordHasher.HashPassword(null, password);
+            return hashedPassword;
+        }
         // GET: Pracownik/Create
         public IActionResult Create()
         {
@@ -61,6 +69,7 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("admin,Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo")] Pracownik pracownik)
         {
+            pracownik.Haslo = HashPassword(pracownik.Haslo);
             if (ModelState.IsValid)
             {
                 _context.Add(pracownik);
