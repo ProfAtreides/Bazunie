@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Iebx6orbL2EoieoKtPkccTLVTRRQn71ndGEULELQ7ldM5DHnxm1R+6QFzVW3arPeHzE8eLZFYxybOsdRfm4dtg==",
+  "dgSpecHash": "erDO+SFbcTbk/kHu2AFifnEVQKGA2rWIo8DPG3sj9HrHYkCFBbq55EDMliHSCDsjhE/VVl/Uf5MP8Cn6u0QSMA==",
   "success": true,
-  "projectFilePath": "U:\\BazyDanych\\Meetings\\Meetings\\Meetings.csproj",
+  "projectFilePath": "C:\\Users\\dambr\\RiderProjects\\Pamsi\\Bazunie\\Meetings\\Meetings.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dambr\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\dambr\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

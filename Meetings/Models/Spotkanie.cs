@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Meetings.Models;
 
@@ -18,7 +19,9 @@ public partial class Spotkanie
 
     public int IdFilii { get; set; }
 
+    [ValidateNever]
     public virtual Filia IdFiliiNavigation { get; set; } = null!;
 
+    [ValidateNever]
     public virtual Sala IdSaliNavigation { get; set; } = null!;
 }
