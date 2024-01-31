@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Meetings.Models;
 
-namespace Meetings;
+namespace Meetings.Models;
+
 
 public partial class PracownicyHasSpotkania
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Meetings.Models;
 
-public class Grafik
+public partial class Grafik
 {
     public int Id { get; set; }
 
@@ -18,9 +18,4 @@ public class Grafik
     public int IdPracownika { get; set; }
 
     public virtual Pracownik IdPracownikaNavigation { get; set; } = null!;
-
-    public Grafik()
-    {
-        
-    }
 }

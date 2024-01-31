@@ -56,10 +56,11 @@ namespace Meetings.Migrations
                 {
                     table.PrimaryKey("PRIMARY", x => x.idDzialu);
                     table.ForeignKey(
-                        name: "Działy_ibfk_1",
+                        name: "FKfk_idFilii",
                         column: x => x.idFilii,
                         principalTable: "filie",
-                        principalColumn: "idFilii");
+                        principalColumn: "idFilii",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_polish_ci");
@@ -85,10 +86,11 @@ namespace Meetings.Migrations
                         principalTable: "filie",
                         principalColumn: "idFilii");
                     table.ForeignKey(
-                        name: "fk_idSali",
+                        name: "fk_sala",
                         column: x => x.idSali,
                         principalTable: "sala",
-                        principalColumn: "idSali");
+                        principalColumn: "idSali",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_polish_ci");
@@ -98,7 +100,6 @@ namespace Meetings.Migrations
                 columns: table => new
                 {
                     idPracownika = table.Column<int>(type: "int", nullable: false),
-                    admin = table.Column<bool>(type: "tinyint(1)", nullable: false,defaultValue:false),
                     imie_pracownika = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_polish_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     nazwisko_pracownika = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_polish_ci")
@@ -108,21 +109,23 @@ namespace Meetings.Migrations
                     idFilii = table.Column<int>(type: "int", nullable: false),
                     idDzialu = table.Column<int>(type: "int", nullable: false),
                     haslo = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_polish_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    admin = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PRIMARY", x => x.idPracownika);
                     table.ForeignKey(
-                        name: "Pracownicy_ibfk_2",
-                        column: x => x.idDzialu,
-                        principalTable: "działy",
-                        principalColumn: "idDzialu");
-                    table.ForeignKey(
                         name: "Pracownicy_ibfk_3",
                         column: x => x.idFilii,
                         principalTable: "filie",
                         principalColumn: "idFilii");
+                    table.ForeignKey(
+                        name: "fk_dzialy",
+                        column: x => x.idDzialu,
+                        principalTable: "działy",
+                        principalColumn: "idDzialu",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_polish_ci");
@@ -146,7 +149,8 @@ namespace Meetings.Migrations
                         name: "fk_idPracownika",
                         column: x => x.idPracownika,
                         principalTable: "pracownicy",
-                        principalColumn: "idPracownika");
+                        principalColumn: "idPracownika",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_polish_ci");
@@ -160,32 +164,32 @@ namespace Meetings.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => new { x.idPracownika, x.idSpotkania })
-                        .Annotation("MySql:IndexPrefixLength", new[] { 0, 0 });
                     table.ForeignKey(
-                        name: "Pracownicy_has_Spotkania_ibfk_1",
-                        column: x => x.idSpotkania,
-                        principalTable: "spotkania",
-                        principalColumn: "idSpotkania");
-                    table.ForeignKey(
-                        name: "Pracownicy_has_Spotkania_ibfk_2",
+                        name: "FK_P",
                         column: x => x.idPracownika,
                         principalTable: "pracownicy",
-                        principalColumn: "idPracownika");
+                        principalColumn: "idPracownika",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_S",
+                        column: x => x.idSpotkania,
+                        principalTable: "spotkania",
+                        principalColumn: "idSpotkania",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_polish_ci");
+
+            migrationBuilder.CreateIndex(
+                name: "FKfk_idFilii",
+                table: "działy",
+                column: "idFilii");
 
             migrationBuilder.CreateIndex(
                 name: "idDzialu",
                 table: "działy",
                 column: "idDzialu",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "idFilii",
-                table: "działy",
-                column: "idFilii");
 
             migrationBuilder.CreateIndex(
                 name: "nazwa_Filii",
@@ -199,17 +203,22 @@ namespace Meetings.Migrations
                 column: "idPracownika");
 
             migrationBuilder.CreateIndex(
-                name: "idDzialu1",
+                name: "fk_dzialy",
                 table: "pracownicy",
                 column: "idDzialu");
 
             migrationBuilder.CreateIndex(
-                name: "idFilii1",
+                name: "idFilii",
                 table: "pracownicy",
                 column: "idFilii");
 
             migrationBuilder.CreateIndex(
-                name: "idSpotkania",
+                name: "FK_P",
+                table: "pracownicy_has_spotkania",
+                column: "idPracownika");
+
+            migrationBuilder.CreateIndex(
+                name: "FK_S",
                 table: "pracownicy_has_spotkania",
                 column: "idSpotkania");
 
@@ -219,7 +228,7 @@ namespace Meetings.Migrations
                 column: "idFilii");
 
             migrationBuilder.CreateIndex(
-                name: "fk_idSali",
+                name: "fk_sala",
                 table: "spotkania",
                 column: "idSali");
         }
@@ -234,16 +243,16 @@ namespace Meetings.Migrations
                 name: "pracownicy_has_spotkania");
 
             migrationBuilder.DropTable(
-                name: "spotkania");
-
-            migrationBuilder.DropTable(
                 name: "pracownicy");
 
             migrationBuilder.DropTable(
-                name: "sala");
+                name: "spotkania");
 
             migrationBuilder.DropTable(
                 name: "działy");
+
+            migrationBuilder.DropTable(
+                name: "sala");
 
             migrationBuilder.DropTable(
                 name: "filie");

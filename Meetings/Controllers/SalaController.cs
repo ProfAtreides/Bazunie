@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Data;
+using Meetings;
 using Meetings.Models;
+using Meetings.Data;
 
 namespace Meetings.Controllers
 {
@@ -22,7 +23,7 @@ namespace Meetings.Controllers
         // GET: Sala
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Salas.ToListAsync());
+            return View(await _context.Sala.ToListAsync());
         }
 
         // GET: Sala/Details/5
@@ -33,7 +34,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var sala = await _context.Salas
+            var sala = await _context.Sala
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (sala == null)
             {
@@ -73,7 +74,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var sala = await _context.Salas.FindAsync(id);
+            var sala = await _context.Sala.FindAsync(id);
             if (sala == null)
             {
                 return NotFound();
@@ -124,7 +125,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var sala = await _context.Salas
+            var sala = await _context.Sala
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (sala == null)
             {
@@ -139,10 +140,10 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sala = await _context.Salas.FindAsync(id);
+            var sala = await _context.Sala.FindAsync(id);
             if (sala != null)
             {
-                _context.Salas.Remove(sala);
+                _context.Sala.Remove(sala);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +152,7 @@ namespace Meetings.Controllers
 
         private bool SalaExists(int id)
         {
-            return _context.Salas.Any(e => e.Id == id);
+            return _context.Sala.Any(e => e.Id == id);
         }
     }
 }

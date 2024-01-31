@@ -11,7 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.Service.EntityFrameworkCore" Version="1.0.0-preview1-final" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
             <PrivateAssets>all</PrivateAssets>
@@ -36,4 +36,11 @@
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0-beta.2" />
     </ItemGroup>
     
+    <ItemGroup>
+      <Folder Include="Areas\DziałyController\Controllers" />
+      <Folder Include="Areas\DziałyController\Data" />
+      <Folder Include="Areas\DziałyController\Models" />
+      <Folder Include="Areas\DziałyController\Views" />
+      <Folder Include="Areas\Identity\Pages\Account" />
+    </ItemGroup>
 </Project>

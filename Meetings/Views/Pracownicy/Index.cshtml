@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Admin)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.ImiePracownika)
             </th>
             <th>
@@ -27,6 +24,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Haslo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Admin)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdDzialuNavigation)
@@ -41,9 +41,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Admin)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ImiePracownika)
             </td>
             <td>
@@ -54,6 +51,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Haslo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Admin)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdDzialuNavigation.Id)

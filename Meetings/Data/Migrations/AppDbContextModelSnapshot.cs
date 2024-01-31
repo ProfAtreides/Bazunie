@@ -40,10 +40,10 @@ namespace Meetings.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
+                    b.HasIndex(new[] { "IdFilii" }, "FKfk_idFilii");
+
                     b.HasIndex(new[] { "Id" }, "idDzialu")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdFilii" }, "idFilii");
 
                     b.ToTable("działy", (string)null);
 
@@ -109,11 +109,15 @@ namespace Meetings.Migrations
                     MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Pracownik", b =>
+            modelBuilder.Entity("Meetings.Models.Pracownicy", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int")
                         .HasColumnName("idPracownika");
+
+                    b.Property<bool>("Admin")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("admin");
 
                     b.Property<string>("Haslo")
                         .HasMaxLength(45)
@@ -143,19 +147,33 @@ namespace Meetings.Migrations
                         .HasColumnType("varchar(45)")
                         .HasColumnName("stanowisko");
 
-                    b.Property<bool>("admin")
-                        .HasColumnType("tinyint(1)");
-
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.HasIndex(new[] { "IdDzialu" }, "idDzialu")
-                        .HasDatabaseName("idDzialu1");
+                    b.HasIndex(new[] { "IdDzialu" }, "fk_dzialy");
 
-                    b.HasIndex(new[] { "IdFilii" }, "idFilii")
-                        .HasDatabaseName("idFilii1");
+                    b.HasIndex(new[] { "IdFilii" }, "idFilii");
 
                     b.ToTable("pracownicy", (string)null);
+
+                    MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
+                });
+
+            modelBuilder.Entity("Meetings.Models.PracownicyHasSpotkania", b =>
+                {
+                    b.Property<int>("IdPracownika")
+                        .HasColumnType("int")
+                        .HasColumnName("idPracownika");
+
+                    b.Property<int>("IdSpotkania")
+                        .HasColumnType("int")
+                        .HasColumnName("idSpotkania");
+
+                    b.HasIndex(new[] { "IdPracownika" }, "FK_P");
+
+                    b.HasIndex(new[] { "IdSpotkania" }, "FK_S");
+
+                    b.ToTable("pracownicy_has_spotkania", (string)null);
 
                     MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
                 });
@@ -178,7 +196,7 @@ namespace Meetings.Migrations
                     MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Spotkanie", b =>
+            modelBuilder.Entity("Meetings.Models.Spotkania", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int")
@@ -210,30 +228,9 @@ namespace Meetings.Migrations
 
                     b.HasIndex(new[] { "IdFilii" }, "fk_idFilii");
 
-                    b.HasIndex(new[] { "IdSali" }, "fk_idSali");
+                    b.HasIndex(new[] { "IdSali" }, "fk_sala");
 
                     b.ToTable("spotkania", (string)null);
-
-                    MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
-                });
-
-            modelBuilder.Entity("PracownicyHasSpotkanium", b =>
-                {
-                    b.Property<int>("IdPracownika")
-                        .HasColumnType("int")
-                        .HasColumnName("idPracownika");
-
-                    b.Property<int>("IdSpotkania")
-                        .HasColumnType("int")
-                        .HasColumnName("idSpotkania");
-
-                    b.HasKey("IdPracownika", "IdSpotkania")
-                        .HasName("PRIMARY")
-                        .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                    b.HasIndex(new[] { "IdSpotkania" }, "idSpotkania");
-
-                    b.ToTable("pracownicy_has_spotkania", (string)null);
 
                     MySqlEntityTypeBuilderExtensions.UseCollation(b, "utf8mb4_polish_ci");
                 });
@@ -241,35 +238,38 @@ namespace Meetings.Migrations
             modelBuilder.Entity("Meetings.Models.Działy", b =>
                 {
                     b.HasOne("Meetings.Models.Filie", "IdFiliiNavigation")
-                        .WithMany("Działies")
+                        .WithMany("Działy")
                         .HasForeignKey("IdFilii")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("Działy_ibfk_1");
+                        .HasConstraintName("FKfk_idFilii");
 
                     b.Navigation("IdFiliiNavigation");
                 });
 
             modelBuilder.Entity("Meetings.Models.Grafik", b =>
                 {
-                    b.HasOne("Meetings.Models.Pracownik", "IdPracownikaNavigation")
-                        .WithMany("Grafiks")
+                    b.HasOne("Meetings.Models.Pracownicy", "IdPracownikaNavigation")
+                        .WithMany("Grafik")
                         .HasForeignKey("IdPracownika")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_idPracownika");
 
                     b.Navigation("IdPracownikaNavigation");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Pracownik", b =>
+            modelBuilder.Entity("Meetings.Models.Pracownicy", b =>
                 {
                     b.HasOne("Meetings.Models.Działy", "IdDzialuNavigation")
-                        .WithMany("Pracownicies")
+                        .WithMany("Pracownicy")
                         .HasForeignKey("IdDzialu")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("Pracownicy_ibfk_2");
+                        .HasConstraintName("fk_dzialy");
 
                     b.HasOne("Meetings.Models.Filie", "IdFiliiNavigation")
-                        .WithMany("Pracownicies")
+                        .WithMany("Pracownicy")
                         .HasForeignKey("IdFilii")
                         .IsRequired()
                         .HasConstraintName("Pracownicy_ibfk_3");
@@ -279,7 +279,28 @@ namespace Meetings.Migrations
                     b.Navigation("IdFiliiNavigation");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Spotkanie", b =>
+            modelBuilder.Entity("Meetings.Models.PracownicyHasSpotkania", b =>
+                {
+                    b.HasOne("Meetings.Models.Pracownicy", "IdPracownikaNavigation")
+                        .WithMany()
+                        .HasForeignKey("IdPracownika")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_P");
+
+                    b.HasOne("Meetings.Models.Spotkania", "IdSpotkaniaNavigation")
+                        .WithMany()
+                        .HasForeignKey("IdSpotkania")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_S");
+
+                    b.Navigation("IdPracownikaNavigation");
+
+                    b.Navigation("IdSpotkaniaNavigation");
+                });
+
+            modelBuilder.Entity("Meetings.Models.Spotkania", b =>
                 {
                     b.HasOne("Meetings.Models.Filie", "IdFiliiNavigation")
                         .WithMany("Spotkania")
@@ -290,46 +311,32 @@ namespace Meetings.Migrations
                     b.HasOne("Meetings.Models.Sala", "IdSaliNavigation")
                         .WithMany("Spotkania")
                         .HasForeignKey("IdSali")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_idSali");
+                        .HasConstraintName("fk_sala");
 
                     b.Navigation("IdFiliiNavigation");
 
                     b.Navigation("IdSaliNavigation");
                 });
 
-            modelBuilder.Entity("PracownicyHasSpotkanium", b =>
-                {
-                    b.HasOne("Meetings.Models.Pracownik", null)
-                        .WithMany()
-                        .HasForeignKey("IdPracownika")
-                        .IsRequired()
-                        .HasConstraintName("Pracownicy_has_Spotkania_ibfk_2");
-
-                    b.HasOne("Meetings.Models.Spotkanie", null)
-                        .WithMany()
-                        .HasForeignKey("IdSpotkania")
-                        .IsRequired()
-                        .HasConstraintName("Pracownicy_has_Spotkania_ibfk_1");
-                });
-
             modelBuilder.Entity("Meetings.Models.Działy", b =>
                 {
-                    b.Navigation("Pracownicies");
+                    b.Navigation("Pracownicy");
                 });
 
             modelBuilder.Entity("Meetings.Models.Filie", b =>
                 {
-                    b.Navigation("Działies");
+                    b.Navigation("Działy");
 
-                    b.Navigation("Pracownicies");
+                    b.Navigation("Pracownicy");
 
                     b.Navigation("Spotkania");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Pracownik", b =>
+            modelBuilder.Entity("Meetings.Models.Pracownicy", b =>
                 {
-                    b.Navigation("Grafiks");
+                    b.Navigation("Grafik");
                 });
 
             modelBuilder.Entity("Meetings.Models.Sala", b =>

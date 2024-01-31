@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Data;
+using Meetings;
 using Meetings.Models;
+using Meetings.Data;
 
 namespace Meetings.Controllers
 {
@@ -22,7 +23,7 @@ namespace Meetings.Controllers
         // GET: Filie
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Filies.ToListAsync());
+            return View(await _context.Filie.ToListAsync());
         }
 
         // GET: Filie/Details/5
@@ -33,7 +34,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var filie = await _context.Filies
+            var filie = await _context.Filie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (filie == null)
             {
@@ -54,15 +55,15 @@ namespace Meetings.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NazwaFilii")] Filie filie)
+        public async Task<IActionResult> Create([Bind("Id,NazwaFilii")] Filia filia)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(filie);
+                _context.Add(filia);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(filie);
+            return View(filia);
         }
 
         // GET: Filie/Edit/5
@@ -73,7 +74,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var filie = await _context.Filies.FindAsync(id);
+            var filie = await _context.Filie.FindAsync(id);
             if (filie == null)
             {
                 return NotFound();
@@ -86,9 +87,9 @@ namespace Meetings.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NazwaFilii")] Filie filie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NazwaFilii")] Filia filia)
         {
-            if (id != filie.Id)
+            if (id != filia.Id)
             {
                 return NotFound();
             }
@@ -97,12 +98,12 @@ namespace Meetings.Controllers
             {
                 try
                 {
-                    _context.Update(filie);
+                    _context.Update(filia);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilieExists(filie.Id))
+                    if (!FilieExists(filia.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +114,7 @@ namespace Meetings.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(filie);
+            return View(filia);
         }
 
         // GET: Filie/Delete/5
@@ -124,7 +125,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var filie = await _context.Filies
+            var filie = await _context.Filie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (filie == null)
             {
@@ -139,10 +140,10 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var filie = await _context.Filies.FindAsync(id);
+            var filie = await _context.Filie.FindAsync(id);
             if (filie != null)
             {
-                _context.Filies.Remove(filie);
+                _context.Filie.Remove(filie);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +152,7 @@ namespace Meetings.Controllers
 
         private bool FilieExists(int id)
         {
-            return _context.Filies.Any(e => e.Id == id);
+            return _context.Filie.Any(e => e.Id == id);
         }
     }
 }

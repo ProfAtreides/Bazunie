@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Data;
+using Meetings;
 using Meetings.Models;
+using Meetings.Data;
 
 namespace Meetings.Controllers
 {
@@ -22,7 +23,7 @@ namespace Meetings.Controllers
         // GET: Grafik
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Grafiks.Include(g => g.IdPracownikaNavigation);
+            var appDbContext = _context.Grafik.Include(g => g.IdPracownikaNavigation);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -34,7 +35,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var grafik = await _context.Grafiks
+            var grafik = await _context.Grafik
                 .Include(g => g.IdPracownikaNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (grafik == null)
@@ -48,7 +49,7 @@ namespace Meetings.Controllers
         // GET: Grafik/Create
         public IActionResult Create()
         {
-            ViewData["IdPracownika"] = new SelectList(_context.Pracownicies, "Id", "Id");
+            ViewData["IdPracownika"] = new SelectList(_context.Pracownicy, "Id", "Id");
             return View();
         }
 
@@ -65,7 +66,7 @@ namespace Meetings.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPracownika"] = new SelectList(_context.Pracownicies, "Id", "Id", grafik.IdPracownika);
+            ViewData["IdPracownika"] = new SelectList(_context.Pracownicy, "Id", "Id", grafik.IdPracownika);
             return View(grafik);
         }
 
@@ -77,12 +78,12 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var grafik = await _context.Grafiks.FindAsync(id);
+            var grafik = await _context.Grafik.FindAsync(id);
             if (grafik == null)
             {
                 return NotFound();
             }
-            ViewData["IdPracownika"] = new SelectList(_context.Pracownicies, "Id", "Id", grafik.IdPracownika);
+            ViewData["IdPracownika"] = new SelectList(_context.Pracownicy, "Id", "Id", grafik.IdPracownika);
             return View(grafik);
         }
 
@@ -118,7 +119,7 @@ namespace Meetings.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPracownika"] = new SelectList(_context.Pracownicies, "Id", "Id", grafik.IdPracownika);
+            ViewData["IdPracownika"] = new SelectList(_context.Pracownicy, "Id", "Id", grafik.IdPracownika);
             return View(grafik);
         }
 
@@ -130,7 +131,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var grafik = await _context.Grafiks
+            var grafik = await _context.Grafik
                 .Include(g => g.IdPracownikaNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (grafik == null)
@@ -146,10 +147,10 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var grafik = await _context.Grafiks.FindAsync(id);
+            var grafik = await _context.Grafik.FindAsync(id);
             if (grafik != null)
             {
-                _context.Grafiks.Remove(grafik);
+                _context.Grafik.Remove(grafik);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +159,7 @@ namespace Meetings.Controllers
 
         private bool GrafikExists(int id)
         {
-            return _context.Grafiks.Any(e => e.Id == id);
+            return _context.Grafik.Any(e => e.Id == id);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Meetings.Controllers
         // GET: Działy
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Działies.Include(d => d.IdFiliiNavigation);
+            var appDbContext = _context.Działy.Include(d => d.IdFiliiNavigation);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var działy = await _context.Działies
+            var działy = await _context.Działy
                 .Include(d => d.IdFiliiNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (działy == null)
@@ -48,7 +48,7 @@ namespace Meetings.Controllers
         // GET: Działy/Create
         public IActionResult Create()
         {
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id");
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id");
             return View();
         }
 
@@ -57,15 +57,16 @@ namespace Meetings.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NazwaDzialu,IdFilii")] Działy działy)
+        public async Task<IActionResult> Create([Bind("Id,NazwaDzialu,IdFilii")] Dział działy)
         {
-            if (ModelState.IsValid)
+            działy.IdFiliiNavigation = _context.Filie.Find(działy.IdFilii);
+            if (TryValidateModel(działy))
             {
                 _context.Add(działy);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", działy.IdFilii);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", działy.IdFilii);
             return View(działy);
         }
 
@@ -77,12 +78,12 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var działy = await _context.Działies.FindAsync(id);
+            var działy = await _context.Działy.FindAsync(id);
             if (działy == null)
             {
                 return NotFound();
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", działy.IdFilii);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", działy.IdFilii);
             return View(działy);
         }
 
@@ -91,7 +92,7 @@ namespace Meetings.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NazwaDzialu,IdFilii")] Działy działy)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NazwaDzialu,IdFilii")] Dział działy)
         {
             if (id != działy.Id)
             {
@@ -118,7 +119,7 @@ namespace Meetings.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", działy.IdFilii);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", działy.IdFilii);
             return View(działy);
         }
 
@@ -130,7 +131,7 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var działy = await _context.Działies
+            var działy = await _context.Działy
                 .Include(d => d.IdFiliiNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (działy == null)
@@ -146,10 +147,10 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var działy = await _context.Działies.FindAsync(id);
+            var działy = await _context.Działy.FindAsync(id);
             if (działy != null)
             {
-                _context.Działies.Remove(działy);
+                _context.Działy.Remove(działy);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +159,7 @@ namespace Meetings.Controllers
 
         private bool DziałyExists(int id)
         {
-            return _context.Działies.Any(e => e.Id == id);
+            return _context.Działy.Any(e => e.Id == id);
         }
     }
 }

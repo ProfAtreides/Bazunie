@@ -5,28 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Data;
+using Meetings;
 using Meetings.Models;
+using Meetings.Data;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Meetings.Controllers
 {
-    public class PracownikController : Controller
+    public class PracownicyController : Controller
     {
         private readonly AppDbContext _context;
 
-        public PracownikController(AppDbContext context)
+        public PracownicyController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Pracownik
+        // GET: Pracownicy
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Pracownicies.Include(p => p.IdDzialuNavigation).Include(p => p.IdFiliiNavigation);
+            var appDbContext = _context.Pracownicy.Include(p => p.IdDzialuNavigation).Include(p => p.IdFiliiNavigation);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Pracownik/Details/5
+        // GET: Pracownicy/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +38,51 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var pracownik = await _context.Pracownicies
+            var pracownicy = await _context.Pracownicy
                 .Include(p => p.IdDzialuNavigation)
                 .Include(p => p.IdFiliiNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (pracownik == null)
+            if (pracownicy == null)
             {
                 return NotFound();
             }
 
-            return View(pracownik);
+            return View(pracownicy);
         }
 
-        // GET: Pracownik/Create
+        // GET: Pracownicy/Create
         public IActionResult Create()
         {
-            ViewData["IdDzialu"] = new SelectList(_context.Działies, "Id", "Id");
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id");
+            ViewData["NazwaDzialu"] = new SelectList(_context.Działy, "Id", "NazwaDzialu");
+            ViewData["NazwaFilli"] = new SelectList(_context.Filie, "Id", "NazwaFilii");
             return View();
         }
 
-        // POST: Pracownik/Create
+        // POST: Pracownicy/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Admin,Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo")] Pracownik pracownik)
+        public async Task<IActionResult> Create([Bind("Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo,Admin")] Pracownik pracownik)
         {
             if (ModelState.IsValid)
             {
+                pracownik.Haslo =  Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: pracownik.Haslo!,
+                    salt: Encoding.UTF8.GetBytes("prosze3;)"),
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: 100000,
+                    numBytesRequested: 256 / 8));
                 _context.Add(pracownik);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdDzialu"] = new SelectList(_context.Działies, "Id", "Id", pracownik.IdDzialu);
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", pracownik.IdFilii);
+            ViewData["NazwaDzialu"] = new SelectList(_context.Działy, "Id", "NazwaDzialu");
+            ViewData["NazwaFilli"] = new SelectList(_context.Filie, "Id", "NazwaFilii");
             return View(pracownik);
         }
 
-        // GET: Pracownik/Edit/5
+        // GET: Pracownicy/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,22 +90,22 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var pracownik = await _context.Pracownicies.FindAsync(id);
-            if (pracownik == null)
+            var pracownicy = await _context.Pracownicy.FindAsync(id);
+            if (pracownicy == null)
             {
                 return NotFound();
             }
-            ViewData["IdDzialu"] = new SelectList(_context.Działies, "Id", "Id", pracownik.IdDzialu);
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", pracownik.IdFilii);
-            return View(pracownik);
+            ViewData["IdDzialu"] = new SelectList(_context.Działy, "Id", "Id", pracownicy.IdDzialu);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", pracownicy.IdFilii);
+            return View(pracownicy);
         }
 
-        // POST: Pracownik/Edit/5
+        // POST: Pracownicy/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Admin,Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo")] Pracownik pracownik)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo,Admin")] Pracownik pracownik)
         {
             if (id != pracownik.Id)
             {
@@ -111,7 +121,7 @@ namespace Meetings.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PracownikExists(pracownik.Id))
+                    if (!PracownicyExists(pracownik.Id))
                     {
                         return NotFound();
                     }
@@ -122,12 +132,12 @@ namespace Meetings.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdDzialu"] = new SelectList(_context.Działies, "Id", "Id", pracownik.IdDzialu);
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", pracownik.IdFilii);
+            ViewData["IdDzialu"] = new SelectList(_context.Działy, "Id", "Id", pracownik.IdDzialu);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", pracownik.IdFilii);
             return View(pracownik);
         }
 
-        // GET: Pracownik/Delete/5
+        // GET: Pracownicy/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,36 +145,36 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var pracownik = await _context.Pracownicies
+            var pracownicy = await _context.Pracownicy
                 .Include(p => p.IdDzialuNavigation)
                 .Include(p => p.IdFiliiNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (pracownik == null)
+            if (pracownicy == null)
             {
                 return NotFound();
             }
 
-            return View(pracownik);
+            return View(pracownicy);
         }
 
-        // POST: Pracownik/Delete/5
+        // POST: Pracownicy/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pracownik = await _context.Pracownicies.FindAsync(id);
-            if (pracownik != null)
+            var pracownicy = await _context.Pracownicy.FindAsync(id);
+            if (pracownicy != null)
             {
-                _context.Pracownicies.Remove(pracownik);
+                _context.Pracownicy.Remove(pracownicy);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PracownikExists(int id)
+        private bool PracownicyExists(int id)
         {
-            return _context.Pracownicies.Any(e => e.Id == id);
+            return _context.Pracownicy.Any(e => e.Id == id);
         }
     }
 }

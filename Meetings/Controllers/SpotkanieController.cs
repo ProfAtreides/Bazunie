@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Data;
+using Meetings;
 using Meetings.Models;
+using Meetings.Data;
 
 namespace Meetings.Controllers
 {
@@ -34,23 +35,23 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var spotkanie = await _context.Spotkania
+            var spotkania = await _context.Spotkania
                 .Include(s => s.IdFiliiNavigation)
                 .Include(s => s.IdSaliNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spotkanie == null)
+            if (spotkania == null)
             {
                 return NotFound();
             }
 
-            return View(spotkanie);
+            return View(spotkania);
         }
 
         // GET: Spotkanie/Create
         public IActionResult Create()
         {
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id");
-            ViewData["IdSali"] = new SelectList(_context.Salas, "Id", "Id");
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id");
+            ViewData["IdSali"] = new SelectList(_context.Sala, "Id", "Id");
             return View();
         }
 
@@ -67,8 +68,8 @@ namespace Meetings.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", spotkanie.IdFilii);
-            ViewData["IdSali"] = new SelectList(_context.Salas, "Id", "Id", spotkanie.IdSali);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", spotkanie.IdFilii);
+            ViewData["IdSali"] = new SelectList(_context.Sala, "Id", "Id", spotkanie.IdSali);
             return View(spotkanie);
         }
 
@@ -80,14 +81,14 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var spotkanie = await _context.Spotkania.FindAsync(id);
-            if (spotkanie == null)
+            var spotkania = await _context.Spotkania.FindAsync(id);
+            if (spotkania == null)
             {
                 return NotFound();
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", spotkanie.IdFilii);
-            ViewData["IdSali"] = new SelectList(_context.Salas, "Id", "Id", spotkanie.IdSali);
-            return View(spotkanie);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", spotkania.IdFilii);
+            ViewData["IdSali"] = new SelectList(_context.Sala, "Id", "Id", spotkania.IdSali);
+            return View(spotkania);
         }
 
         // POST: Spotkanie/Edit/5
@@ -111,7 +112,7 @@ namespace Meetings.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpotkanieExists(spotkanie.Id))
+                    if (!SpotkaniaExists(spotkanie.Id))
                     {
                         return NotFound();
                     }
@@ -122,8 +123,8 @@ namespace Meetings.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdFilii"] = new SelectList(_context.Filies, "Id", "Id", spotkanie.IdFilii);
-            ViewData["IdSali"] = new SelectList(_context.Salas, "Id", "Id", spotkanie.IdSali);
+            ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", spotkanie.IdFilii);
+            ViewData["IdSali"] = new SelectList(_context.Sala, "Id", "Id", spotkanie.IdSali);
             return View(spotkanie);
         }
 
@@ -135,16 +136,16 @@ namespace Meetings.Controllers
                 return NotFound();
             }
 
-            var spotkanie = await _context.Spotkania
+            var spotkania = await _context.Spotkania
                 .Include(s => s.IdFiliiNavigation)
                 .Include(s => s.IdSaliNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spotkanie == null)
+            if (spotkania == null)
             {
                 return NotFound();
             }
 
-            return View(spotkanie);
+            return View(spotkania);
         }
 
         // POST: Spotkanie/Delete/5
@@ -152,17 +153,17 @@ namespace Meetings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var spotkanie = await _context.Spotkania.FindAsync(id);
-            if (spotkanie != null)
+            var spotkania = await _context.Spotkania.FindAsync(id);
+            if (spotkania != null)
             {
-                _context.Spotkania.Remove(spotkanie);
+                _context.Spotkania.Remove(spotkania);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SpotkanieExists(int id)
+        private bool SpotkaniaExists(int id)
         {
             return _context.Spotkania.Any(e => e.Id == id);
         }

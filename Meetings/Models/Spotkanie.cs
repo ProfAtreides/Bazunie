@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Meetings.Models;
 
-public class Spotkanie
+
+public partial class Spotkanie
 {
     public int Id { get; set; }
 
@@ -17,14 +18,7 @@ public class Spotkanie
 
     public int IdFilii { get; set; }
 
-    public virtual Filie IdFiliiNavigation { get; set; } = null!;
+    public virtual Filia IdFiliiNavigation { get; set; } = null!;
 
     public virtual Sala IdSaliNavigation { get; set; } = null!;
-
-    public virtual ICollection<Pracownik> IdPracownikas { get; set; } = new List<Pracownik>();
-
-    public Spotkanie()
-    {
-        
-    }
 }

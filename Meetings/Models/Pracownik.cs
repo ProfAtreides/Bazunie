@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Meetings.Models;
 
-public class Pracownik
+public partial class Pracownik
 {
-    public bool Admin { get; set; }
     public int Id { get; set; }
 
     public string? ImiePracownika { get; set; }
@@ -20,15 +20,14 @@ public class Pracownik
 
     public string? Haslo { get; set; }
 
-    public virtual ICollection<Grafik> Grafiks { get; set; } = new List<Grafik>();
+    public bool Admin { get; set; }
 
-    public virtual Działy IdDzialuNavigation { get; set; } = null!;
+    [ValidateNever]
+    public virtual ICollection<Grafik> Grafik { get; set; } = new List<Grafik>();
 
-    public virtual Filie IdFiliiNavigation { get; set; } = null!;
+    [ValidateNever]
+    public virtual Dział IdDzialuNavigation { get; set; } = null!;
 
-    public virtual ICollection<Spotkanie> IdSpotkania { get; set; } = new List<Spotkanie>();
-
-    public Pracownik()
-    {
-    }
+    [ValidateNever]
+    public virtual Filia IdFiliiNavigation { get; set; } = null!;
 }

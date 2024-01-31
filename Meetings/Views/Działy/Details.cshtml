@@ -1,4 +1,4 @@
-@model Meetings.Models.Działy
+@model Meetings.Models.Dział
 
 @{
     ViewData["Title"] = "Details";
@@ -9,22 +9,48 @@
 
 <div>
     <h4>Działy</h4>
-    <hr />
+    <hr/>
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.NazwaDzialu)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.NazwaDzialu)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IdFiliiNavigation)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IdFiliiNavigation.Id)
         </dd>
     </dl>
 </div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayName("Imie")
+        </th>
+        <th>
+            @Html.DisplayName("Nazwisko")
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Pracownicy)
+    {
+        <tr>
+            <td>
+                @Html.Display(item.ImiePracownika)
+            </td>
+            <td>
+                @Html.Display(item.NazwiskoPracownika)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
