@@ -8,6 +8,7 @@
     
     <ItemGroup>
         <PackageReference Include="EntityFramework" Version="6.4.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.Service.EntityFrameworkCore" Version="1.0.0-preview1-final" />
@@ -25,6 +26,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.3.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts" Version="6.0.0-preview.6.21362.1" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
         <PackageReference Include="MIG" Version="1.2.17" />
@@ -34,6 +36,7 @@
         <PackageReference Include="MySqlConnector" Version="2.3.5" />
         <PackageReference Include="MySqlConnector.DependencyInjection" Version="2.3.5" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0-beta.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.0" />
     </ItemGroup>
     
     <ItemGroup>
@@ -42,5 +45,9 @@
       <Folder Include="Areas\DziałyController\Models" />
       <Folder Include="Areas\DziałyController\Views" />
       <Folder Include="Areas\Identity\Pages\Account" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Include="wwwroot\js\_auth.js" />
     </ItemGroup>
 </Project>

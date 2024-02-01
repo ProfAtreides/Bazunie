@@ -11,6 +11,7 @@ using Meetings.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Meetings.Controllers
 {
@@ -51,6 +52,7 @@ namespace Meetings.Controllers
         }
 
         // GET: Pracownicy/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["NazwaDzialu"] = new SelectList(_context.Działy, "Id", "NazwaDzialu");
@@ -63,6 +65,7 @@ namespace Meetings.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,ImiePracownika,NazwiskoPracownika,Stanowisko,IdFilii,IdDzialu,Haslo,Admin")] Pracownik pracownik)
         {
             if (ModelState.IsValid)

@@ -60,6 +60,12 @@ namespace Meetings.Controllers
         public async Task<IActionResult> Create([Bind("Id,NazwaDzialu,IdFilii")] Dział działy)
         {
             działy.IdFiliiNavigation = _context.Filie.Find(działy.IdFilii);
+
+            if (_context.Działy.Find(działy.Id) != null)
+            {
+                ViewData["IdFilii"] = new SelectList(_context.Filie, "Id", "Id", działy.IdFilii);
+                return View(działy);
+            }
             if (TryValidateModel(działy))
             {
                 _context.Add(działy);
