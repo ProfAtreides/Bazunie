@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if(Login.Pracownik.Admin)
+{
 <h1>Edit</h1>
 
 <h4>Filie</h4>
@@ -29,4 +31,6 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+}
+
 

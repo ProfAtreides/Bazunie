@@ -5,45 +5,49 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+@if (Login.loggedIn)
+{
+    <h1>Details</h1>
+    
+    <div>
+        <h4>Grafik</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.GodzinaRozpoczecia)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.GodzinaRozpoczecia)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.GodzinaZakonczenia)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.GodzinaZakonczenia)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.IloscGodzin)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IloscGodzin)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DzienTygodnia)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DzienTygodnia)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.IdPracownikaNavigation)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdPracownikaNavigation.Id)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
 
-<div>
-    <h4>Grafik</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GodzinaRozpoczecia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GodzinaRozpoczecia)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GodzinaZakonczenia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GodzinaZakonczenia)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IloscGodzin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IloscGodzin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DzienTygodnia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DzienTygodnia)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdPracownikaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdPracownikaNavigation.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
